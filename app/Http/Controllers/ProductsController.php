@@ -9,12 +9,13 @@ use App\Models\ProductFeature;
 use App\Models\ProductGallery;
 use App\Traits\Helpers;
 use App\Traits\HomeApi;
+use App\Traits\SearchApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
 {
-    use Helpers;
+    use Helpers, HomeApi, SearchApi;
 
     public function __construct()
     {
@@ -74,7 +75,7 @@ class ProductsController extends Controller
 
     public function show($id)
     {
-        $product = Product::with('features', 'gallery')->findOrFail($id);
+        $product = Product::with('features', 'gallery', 'brand', 'category')->findOrFail($id);
 
         return response()->json(['product' => $product], 200);
     }
@@ -122,6 +123,11 @@ class ProductsController extends Controller
     {
         try {
             $product = Product::with('gallery')->findOrFail($id);
+
+            // check if this product have orders attached to it then reject delete
+            if($product->orderDetails->count() > 0) {
+                throw new \Exception("Can't delete the product as there already orders attached to it");
+            }
 
             foreach ($product->gallery as $gallery) {
                 if(!empty($gallery->image)) {
@@ -276,5 +282,28 @@ class ProductsController extends Controller
         }
 
         return [];
+    }
+    
+    public function sliderProducts()
+    {
+        return $this->getSliderProducts();
+    }
+    public function latestProducts()
+    {
+        return $this->getLatestProducts();
+    }
+    public function featuredProducts()
+    {
+        return $this->getFeaturedProducts();
+    }
+
+    public function searchProducts(Request $request)
+    {
+        return $this->getProductsForSearch($request->toArray());
+    }
+
+    public function productsByIds(Request $request)
+    {
+        return $this->getProductsByIds(explode(",", $request->input("ids")));
     }
 }

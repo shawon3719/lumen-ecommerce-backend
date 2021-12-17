@@ -7,13 +7,13 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\CategoryFeature;
 use App\Traits\Helpers;
-// use App\Traits\HomeApi;
+use App\Traits\HomeApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CategoriesController extends Controller
 {
-    use Helpers;
+    use Helpers, HomeApi;
 
     public function __construct()
     {
@@ -117,7 +117,6 @@ class CategoriesController extends Controller
     {
         return $this->getCategoryMenuTree();
     }
-
     public function featuredCategories(Request $request)
     {
         return $this->getFeaturedCategories();

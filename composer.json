@@ -6,8 +6,10 @@
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
+        "illuminate/mail": "^8.76",
         "intervention/image": "^2.7",
         "laravel/lumen-framework": "^8.3.1",
+        "pusher/pusher-php-server": "^7.0",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {

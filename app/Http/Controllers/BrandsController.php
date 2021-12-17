@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Traits\SearchApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class BrandsController extends Controller
 {
+    use SearchApi;
+
     public function __construct()
     {
         // $this->middleware('super_admin_check:store-update-destroy');
@@ -92,5 +95,10 @@ class BrandsController extends Controller
         $brands = $query->paginate(10);
 
         return $brands;
+    }
+
+    public function brandsByCategory(Request $request)
+    {
+        return $this->getBrandsByCategory($request->category_id);
     }
 }
